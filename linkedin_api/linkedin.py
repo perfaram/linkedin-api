@@ -373,6 +373,7 @@ class Linkedin(object):
                     "distance": item.get("memberDistance", {}).get("value"),
                     "public_id": item.get("publicIdentifier"),
                     "tracking_id": get_id_from_urn(item.get("trackingUrn")),
+                    "item": item
                 }
             )
 
