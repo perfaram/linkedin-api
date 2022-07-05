@@ -188,7 +188,7 @@ class Linkedin(object):
             data["paging"] = res.json()["paging"]
         return data["elements"]
 
-    def search(self, params, limit=-1, offset=0):
+    def search(self, params, limit=-1, offset=0, endpoint=None):
         """Perform a LinkedIn search.
 
         :param params: Search parameters (see code)
@@ -197,6 +197,8 @@ class Linkedin(object):
         :type limit: int, optional
         :param offset: Index to start searching from
         :type offset: int, optional
+        :param endpoint: Custom search endpoint to use. Disables default search parameters.
+        :type endpoint: str, optional
 
 
         :return: List of search results
@@ -211,18 +213,23 @@ class Linkedin(object):
             # when we're close to the limit, only fetch what we need to
             if limit > -1 and limit - len(results) < count:
                 count = limit - len(results)
-            default_params = {
-                "count": str(count),
-                "filters": "List()",
-                "origin": "GLOBAL_SEARCH_HEADER",
-                "q": "all",
-                "start": len(results) + offset,
-                "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
-            }
-            default_params.update(params)
+            if endpoint is None:
+                default_params = {
+                    "count": str(count),
+                    "filters": "List()",
+                    "origin": "GLOBAL_SEARCH_HEADER",
+                    "q": "all",
+                    "start": len(results) + offset,
+                    "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
+                }
+                default_params.update(params)
+                request_path = "/search/blended"
+            else:
+                default_params = params
+                request_path = endpoint
 
             res = self._fetch(
-                f"/search/blended?{urlencode(default_params, safe='(),')}",
+                f"{request_path}?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             data = res.json()
