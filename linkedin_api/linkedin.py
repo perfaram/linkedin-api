@@ -235,6 +235,7 @@ class Linkedin(object):
                 f"{request_path}?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
+            print(res)
             data = res.json()
 
             new_elements = []
