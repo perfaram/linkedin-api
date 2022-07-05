@@ -213,19 +213,22 @@ class Linkedin(object):
             # when we're close to the limit, only fetch what we need to
             if limit > -1 and limit - len(results) < count:
                 count = limit - len(results)
+            
+            default_params = {
+                "count": str(count),
+                "start": len(results) + offset,
+            }
             if endpoint is None:
-                default_params = {
-                    "count": str(count),
+                default_params.update({
                     "filters": "List()",
                     "origin": "GLOBAL_SEARCH_HEADER",
                     "q": "all",
-                    "start": len(results) + offset,
                     "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
-                }
+                })
                 default_params.update(params)
                 request_path = "/search/blended"
             else:
-                default_params = params
+                default_params.update(params)
                 request_path = endpoint
 
             res = self._fetch(
