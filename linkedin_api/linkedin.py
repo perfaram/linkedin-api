@@ -314,7 +314,7 @@ class Linkedin(object):
         :param connection_of: Connection of LinkedIn user, given by profile URN ID
         :type connection_of: str, optional
         :param params: Additional parameters to include in the query
-        :type params: list, optional
+        :type params: dict, optional
 
         :return: List of profiles (minimal data only)
         :rtype: list
