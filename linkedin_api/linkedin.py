@@ -272,6 +272,7 @@ class Linkedin(object):
         keyword_school=None,
         network_depth=None,  # DEPRECATED - use network_depths
         title=None,  # DEPRECATED - use keyword_title
+        params=None, # Additional query parameters
         **kwargs,
     ):
         """Perform a LinkedIn search for people.
@@ -312,6 +313,8 @@ class Linkedin(object):
         :type keyword_school: str, optional
         :param connection_of: Connection of LinkedIn user, given by profile URN ID
         :type connection_of: str, optional
+        :param params: Additional parameters to include in the query
+        :type params: list, optional
 
         :return: List of profiles (minimal data only)
         :rtype: list
@@ -352,7 +355,8 @@ class Linkedin(object):
         if keyword_school:
             filters.append(f"school->{keyword_school}")
 
-        params = {"filters": "List({})".format(",".join(filters))}
+        search_params = {"filters": "List({})".format(",".join(filters))}
+        params.update(search_params)
 
         if keywords:
             params["keywords"] = keywords
